@@ -1,0 +1,3 @@
+module Cocaine
+
+end

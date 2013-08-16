@@ -1,0 +1,3 @@
+class Cocaine::Compiler
+
+end

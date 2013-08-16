@@ -1,7 +1,5 @@
-require "pry"
-require "rspec"
-require_relative "../lib/compiler"
+require_relative "./spec_helper"
 
-describe Compiler
+describe Cocaine::Compiler do
 
 end
