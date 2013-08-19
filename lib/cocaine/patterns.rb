@@ -11,10 +11,16 @@ module Cocaine::Patterns
 
   CLASS_MODULE_DEF = / \s*
     (class|module) \s+
-    (?<class_module>\w+)
+    (?<class_module>[\w\:\d]+)
     \s* <? \s*
-    (?<super_class_name>\w*)
+    (?<super_class_name>[\w\:\d]*)
     \s*
+    [\n\;]
+  /x
+
+  IF_ELSE = / \s*
+    (?<conditional>if|elsif|else) \s*
+    (?<condition>.+)? \s*
     [\n\;]
   /x
 
