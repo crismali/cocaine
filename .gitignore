@@ -3,3 +3,4 @@
 /spec/.DS_Store
 test.rb
 /spec/test_files/test_file.js
+.ruby-version
