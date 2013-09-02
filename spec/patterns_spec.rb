@@ -311,6 +311,78 @@ describe Cocaine::Patterns do
     end
   end
 
+  describe "ELSIF" do
+
+    let(:pattern) { Cocaine::Patterns::ELSIF }
+
+    it "matches 'elsif'" do
+      result = "elsif".match pattern
+      expect(result["elsif"]).to eq("elsif")
+    end
+
+    it "doesn't match other words" do
+      result = "else if".match pattern
+      expect(result).to be_nil
+    end
+  end
+
+  describe "INLINE_IF_UNLESSS" do
+
+    let(:pattern) { Cocaine::Patterns::INLINE_IF_UNLESSS }
+
+    context "when it's if" do
+      let(:line) { "array[42].map! { |x| x + x.num } if number > 55\n" }
+      let(:result) { line.match pattern }
+
+      it "captures the expression" do
+        expect(result["expression"]).to eq("array[42].map! { |x| x + x.num }")
+      end
+
+      it "captures the conditional" do
+        expect(result["conditional"]).to eq("if")
+      end
+
+      it "captures the condition" do
+        expect(result["condition"]).to eq("number > 55")
+      end
+    end
+
+    context "when it's unless" do
+      let(:line) { "array[42].map! { |x| x + x.num } unless number > 55;" }
+      let(:result) { line.match pattern }
+
+      it "captures the expression" do
+        expect(result["expression"]).to eq("array[42].map! { |x| x + x.num }")
+      end
+
+      it "captures the conditional" do
+        expect(result["conditional"]).to eq("unless")
+      end
+
+      it "captures the condition" do
+        expect(result["condition"]).to eq("number > 55")
+      end
+    end
+
+
+    context "when there are a lot of spaces" do
+      let(:line) { "   something   .   method variable_if    if    condition == other_thing    \n" }
+      let(:result) { line.match pattern }
+
+      it "captures the expression" do
+        expect(result["expression"]).to eq("   something   .   method variable_if   ")
+      end
+
+      it "captures the conditional" do
+        expect(result["conditional"]).to eq("if")
+      end
+
+      it "captures the condition" do
+        expect(result["condition"]).to eq("condition == other_thing    ")
+      end
+    end
+  end
+
   describe "DO_BASIC" do
 
     let(:pattern) { Cocaine::Patterns::DO_BASIC }

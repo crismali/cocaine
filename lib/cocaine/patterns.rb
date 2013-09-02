@@ -31,6 +31,15 @@ module Cocaine::Patterns
     [\n\;]
   /x
 
+  ELSIF = /(?<elsif>elsif)/x
+
+  INLINE_IF_UNLESSS = /
+    (?<expression>.+)
+    \s+ (?<conditional>if | unless) \s+
+    (?<condition>.+)
+    [\n\;]
+  /x
+
   DO_BASIC = /
     (?<expression>.+)
       \s do \s*
