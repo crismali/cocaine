@@ -53,4 +53,12 @@ module Cocaine::Patterns
     \s* \|
   /x
 
+  DOUBLE_QUOTES_STRING = /
+    (?<string>".+")
+  /x
+
+  SINGLE_QUOTES_STRING = /
+    (?<string>'.+')
+  /x
+
 end

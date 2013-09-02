@@ -471,4 +471,58 @@ describe Cocaine::Patterns do
       end
     end
   end
+
+  describe "DOUBLE_QUOTES_STRING" do
+
+    let(:pattern) { Cocaine::Patterns::DOUBLE_QUOTES_STRING }
+
+    it "captures the string literal" do
+      line = %|some.code "this is a string literal (really)."|
+      result = line.match pattern
+      expect(result["string"]).to eq("\"this is a string literal (really).\"")
+    end
+
+    context "when there are escaped quotes" do
+      it "captures the string literal" do
+        line = %|some.code "this string with \"escaped quotes\""|
+        result = line.match pattern
+        expect(result["string"]).to eq(%|"this string with \"escaped quotes\""|)
+      end
+    end
+
+    context "when there is no string literal" do
+      it "captures nothing" do
+        line = %| some.stringless.code |
+        result = line.match pattern
+        expect(result).to be_nil
+      end
+    end
+  end
+
+  describe "SINGLE_QUOTES_STRING" do
+
+    let(:pattern) { Cocaine::Patterns::SINGLE_QUOTES_STRING }
+
+    it "captures the string literal" do
+      line = %|some.code 'this is a string literal (really).'|
+      result = line.match pattern
+      expect(result["string"]).to eq('\'this is a string literal (really).\'')
+    end
+
+    context "when there are escaped quotes" do
+      it "captures the string literal" do
+        line = %|some.code 'this string with \'escaped quotes\''|
+        result = line.match pattern
+        expect(result["string"]).to eq(%|'this string with \'escaped quotes\''|)
+      end
+    end
+
+    context "when there is no string literal" do
+      it "captures nothing" do
+        line = %| some.stringless.code |
+        result = line.match pattern
+        expect(result).to be_nil
+      end
+    end
+  end
 end
