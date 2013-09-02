@@ -4,7 +4,7 @@ module Cocaine::Patterns
     (?<singleton>self\.)?
     (?<method_name>[\w\?]+)
     \s* \(? \s*
-      (?<args_list>[^\(\)\;\n]*)
+      (?<args_list>[^\)\(\;\n\|]*)
     \s* \)? \s*
     [\n\;]
   /x
@@ -22,6 +22,19 @@ module Cocaine::Patterns
     (?<conditional>if|elsif|else) \s*
     (?<condition>.+)? \s*
     [\n\;]
+  /x
+
+  DO_BASIC = /
+    (?<expression>.+)
+      \s do \s*
+    (?<args_list>.*)
+    [\n\;]
+  /x
+
+  BLOCK_ARGS_LIST = /
+    \| \s*
+      (?<args_list>.+)
+    \s* \|
   /x
 
 end

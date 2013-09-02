@@ -40,6 +40,14 @@ describe Cocaine::Patterns do
       end
     end
 
+    context "when there's a pipe in the argument list" do
+      it "doesn't match the string" do
+        line = "def method(|arg)\n"
+        result = line.match pattern
+        expect(result).to be_nil
+      end
+    end
+
     context "when the method name has spaces in front of it" do
       it "captures the method name" do
         spaced_method = "   def method\n"
@@ -236,6 +244,95 @@ describe Cocaine::Patterns do
 
       it "doesn't need the condition" do
         expect(result["condition"]).to be_nil
+      end
+    end
+  end
+
+  describe "DO_BASIC" do
+
+    let(:pattern) { Cocaine::Patterns::DO_BASIC }
+
+    it "captures the arguments" do
+      line = "hash.each do |key, value|\n"
+      result = line.match pattern
+      expect(result["args_list"]).to eq("|key, value|")
+    end
+
+    it "captures the expression" do
+      line = "hash.each do |key, value|\n"
+      result = line.match pattern
+      expect(result["expression"]).to eq("hash.each")
+    end
+
+    context "when there's a number in the argument declaration" do
+      it "captures the arguments" do
+        line = "hash.each do |arg_1, arg_2|\n"
+        result = line.match pattern
+        expect(result["args_list"]).to eq("|arg_1, arg_2|")
+      end
+    end
+
+    context "when there are a lot of spaces" do
+      let(:line) { "   hash  .each    do    |   key  ,   value   |    \n" }
+      let(:result) { line.match pattern }
+
+      it "captures the arguments" do
+        expect(result["args_list"]).to eq("|   key  ,   value   |    ")
+      end
+
+      it "captures the expression" do
+        expect(result["expression"]).to eq("   hash  .each   ")
+      end
+    end
+
+    context "when there aren't any arguments" do
+      it "it captures the expression" do
+        line = " object.need_block_method! do\n"
+        result = line.match pattern
+        expect(result["expression"]).to eq(" object.need_block_method!")
+        line = " object.need_block_method! do   \n"
+        result = line.match pattern
+        expect(result["expression"]).to eq(" object.need_block_method!")
+      end
+    end
+
+    context "when there's only one argument" do
+      let(:line) { "array.each do |element|\n" }
+      let(:result) { line.match pattern }
+
+      it "captures the expression" do
+        expect(result["expression"]).to eq("array.each")
+      end
+
+      it "captures the arguments list" do
+        expect(result["args_list"]).to eq("|element|")
+      end
+    end
+  end
+
+  describe "BLOCK_ARGS_LIST" do
+
+    let(:pattern) { Cocaine::Patterns::BLOCK_ARGS_LIST }
+
+    it "captures the arguments list" do
+      line = "|arg_1|"
+      result = line.match pattern
+      expect(result["args_list"]).to eq("arg_1")
+    end
+
+    context "when there are a ton of spaces" do
+      it "captures the arguments list" do
+        line = "    |   arg_1   ,   arg_2   |   "
+        result = line.match pattern
+        expect(result["args_list"]).to eq("arg_1   ,   arg_2   ")
+      end
+    end
+
+    context "when there are multiple arguments" do
+      it "captures the arguments list" do
+        line = "|arg_1, arg_2|"
+        result = line.match pattern
+        expect(result["args_list"]).to eq("arg_1, arg_2")
       end
     end
   end
