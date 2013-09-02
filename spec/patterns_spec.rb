@@ -101,19 +101,69 @@ describe Cocaine::Patterns do
 
     context "when the method is a singleton" do
       it "captures the method name" do
-        singleton = "def self.method\n"
-        result = singleton.match pattern
+        singleton_method = "def self.method\n"
+        result = singleton_method.match pattern
         expect(result).to_not be_nil
-        expect(result["method_name"]).to eq("method")
-        expect(result["singleton"]).to eq("self.")
+        expect(result["method_name"]).to eq("self.method")
       end
 
       it "captures the argument list" do
-        singleton = "def self.method arg_1\n"
-        result = singleton.match pattern
+        singleton_method = "def self.method arg_1\n"
+        result = singleton_method.match pattern
         expect(result).to_not be_nil
         expect(result["args_list"]).to eq("arg_1")
-        expect(result["singleton"]).to eq("self.")
+      end
+    end
+  end
+
+  describe "INITIALIZE" do
+
+    let(:pattern) { Cocaine::Patterns::INITIALIZE }
+
+    it "captures the word 'initialize'" do
+      method_name = "initialize"
+      result = method_name.match pattern
+      expect(result["initialize"]).to eq("initialize")
+    end
+
+    context "when it's not the word 'initialize'" do
+      it "captures nothing" do
+        method_name = "not_initialize"
+        result = method_name.match pattern
+        expect(result).to be_nil
+
+        method_name = "initialize?"
+        result = method_name.match pattern
+        expect(result).to be_nil
+      end
+    end
+  end
+
+  describe "SINGLETON" do
+
+    let(:pattern) { Cocaine::Patterns::SINGLETON }
+
+    it "captures 'self.'" do
+      method_name = "self.method"
+      result = method_name.match pattern
+      expect(result["singleton"]).to eq("self.")
+    end
+
+    it "captures when there's spaces" do
+      method_name = "self    .method"
+      result = method_name.match pattern
+      expect(result["singleton"]).to eq("self    .")
+    end
+
+    context "when it's not 'self.'" do
+      it "captures nothing" do
+        method_name = "self_method"
+        result = method_name.match pattern
+        expect(result).to be_nil
+
+        method_name = "method_self"
+        result = method_name.match pattern
+        expect(result).to be_nil
       end
     end
   end

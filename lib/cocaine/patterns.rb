@@ -1,12 +1,19 @@
 module Cocaine::Patterns
 
   METHOD_DEF = /\s* def \s*
-    (?<singleton>self\.)?
-    (?<method_name>[\w\?]+)
+    (?<method_name>[\w\?\.]+)
     \s* \(? \s*
       (?<args_list>[^\)\(\;\n\|]*)
     \s* \)? \s*
     [\n\;]
+  /x
+
+  INITIALIZE = /
+    (?<initialize>\Ainitialize\z)
+  /x
+
+  SINGLETON = /
+    (?<singleton>self\s*\.)
   /x
 
   CLASS_MODULE_DEF = / \s*
@@ -19,7 +26,7 @@ module Cocaine::Patterns
   /x
 
   IF_ELSE = / \s*
-    (?<conditional>if|elsif|else) \s*
+    (?<conditional>if | elsif | else) \s*
     (?<condition>.+)? \s*
     [\n\;]
   /x
