@@ -9,7 +9,7 @@ module Cocaine::Patterns
   /x
 
   INITIALIZE = /
-    (?<initialize>\Ainitialize\z)
+    (?<initialize>\A initialize \z)
   /x
 
   SINGLETON = /
@@ -25,8 +25,8 @@ module Cocaine::Patterns
     [\n\;]
   /x
 
-  IF_ELSE = / \s*
-    (?<conditional>if | elsif | else) \s*
+  IF_ELSIF_ELSE_UNLESS = / \s*
+    (?<conditional>if | elsif | else | unless) \s*
     (?<condition>.+)? \s*
     [\n\;]
   /x

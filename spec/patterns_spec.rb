@@ -235,9 +235,9 @@ describe Cocaine::Patterns do
     end
   end
 
-  describe "IF_ELSE" do
+  describe "IF_ELSIF_ELSE_UNLESS" do
 
-    let(:pattern) { Cocaine::Patterns::IF_ELSE }
+    let(:pattern) { Cocaine::Patterns::IF_ELSIF_ELSE_UNLESS }
 
     it "works when there are a ton of unnecessary spaces" do
       line = "    if     object     \n"
@@ -277,6 +277,19 @@ describe Cocaine::Patterns do
 
       it "captures the conditional" do
         expect(result["conditional"]).to eq("elsif")
+      end
+
+      it "captures the condition" do
+        expect(result["condition"]).to eq("object")
+      end
+    end
+
+    context "when an unless" do
+      let(:line) { "unless object\n" }
+      let(:result) { line.match pattern }
+
+      it "captures the conditional" do
+        expect(result["conditional"]).to eq("unless")
       end
 
       it "captures the condition" do
