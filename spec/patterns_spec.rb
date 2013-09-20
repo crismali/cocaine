@@ -25,6 +25,12 @@ describe Cocaine::Patterns do
       expect(result).to_not be_nil
     end
 
+    it "works when there's a number in the method name" do
+      method = "def super_deluxe_method_5\n"
+      result = method.match pattern
+      expect(result).to_not be_nil
+    end
+
     it "works when there are tons of unnecessary spaces" do
       method = "    def     method  (  arg_1   ,   arg_2  =  5       , *args )  \n"
       result = method.match pattern
