@@ -181,14 +181,14 @@ describe Cocaine::Patterns do
     it "captures the class name" do
       class_def = "class Dog\n"
       result = class_def.match pattern
-      expect(result["class_module"]).to eq("Dog")
+      expect(result["class"]).to eq("Dog")
     end
 
     context "when there's inheritance" do
       it "captures the class name" do
        class_def = "class Dog < Animal\n"
        result = class_def.match pattern
-       expect(result["class_module"]).to eq("Dog")
+       expect(result["class"]).to eq("Dog")
       end
 
       it "captures the super class' name" do
@@ -222,7 +222,7 @@ describe Cocaine::Patterns do
       it "captures the class name and its namespace" do
         class_def = "class Namespace::SomeClass\n"
         result = class_def.match pattern
-        expect(result["class_module"]).to eq("Namespace::SomeClass")
+        expect(result["class"]).to eq("Namespace::SomeClass")
       end
     end
 
@@ -488,11 +488,19 @@ describe Cocaine::Patterns do
       expect(result["string"]).to eq("\"this is a string literal (really).\"")
     end
 
-    context "when there are escaped quotes" do
-      it "captures the string literal" do
-        line = %|some.code "this string with \"escaped quotes\""|
+    context "when there are multiple strings" do
+      it "captures the first string literal" do
+        line = %|some.code("this string").split "that string"|
         result = line.match pattern
-        expect(result["string"]).to eq(%|"this string with \"escaped quotes\""|)
+        expect(result["string"]).to eq(%|"this string"|)
+      end
+    end
+
+    context "when there's an empty string" do
+      it "captures the empty string literal" do
+        line = %| some.code("") |
+        result = line.match pattern
+        expect(result["string"]).to eq(%|""|)
       end
     end
 
@@ -515,11 +523,19 @@ describe Cocaine::Patterns do
       expect(result["string"]).to eq('\'this is a string literal (really).\'')
     end
 
-    context "when there are escaped quotes" do
-      it "captures the string literal" do
-        line = %|some.code 'this string with \'escaped quotes\''|
+    context "when there are multiple strings" do
+      it "captures the first string literal" do
+        line = %|some.code('this string').split 'that string'|
         result = line.match pattern
-        expect(result["string"]).to eq(%|'this string with \'escaped quotes\''|)
+        expect(result["string"]).to eq(%|'this string'|)
+      end
+    end
+
+    context "when there's an empty string" do
+      it "captures the empty string literal" do
+        line = %| some.code('') |
+        result = line.match pattern
+        expect(result["string"]).to eq(%|''|)
       end
     end
 
@@ -531,4 +547,32 @@ describe Cocaine::Patterns do
       end
     end
   end
+
+  describe "INTERPOLATION" do
+
+    let(:pattern) { Cocaine::Patterns::INTERPOLATION }
+
+    it "captures the expression" do
+      string = %|"Walking the dog to the \#{place_name}"|
+      result = string.match pattern
+      expect(result["expression"]).to eq("\#\{place_name\}")
+    end
+
+    context "when there are 2 interpolations" do
+      it "captures the first interpolation" do
+        string =  %|"Walking the \#{thing} to the \#{place}"|
+        result = string.match pattern
+        expect(result["expression"]).to eq("\#\{thing\}")
+      end
+    end
+
+    context "when there isn't any interpolation" do
+      it "captures nothing" do
+        string = %|"Some boring string"|
+        result = string.match pattern
+        expect(result).to be_nil
+      end
+    end
+  end
+
 end

@@ -13,12 +13,12 @@ module Cocaine::Patterns
   /x
 
   SINGLETON = /
-    (?<singleton>self\s*\.)
+    (?<singleton>self \s* \.)
   /x
 
   CLASS_MODULE_DEF = / \s*
     (class|module) \s+
-    (?<class_module>[\w\:\d]+)
+    (?<class>[\w\:\d]+)
     \s* <? \s*
     (?<super_class_name>[\w\:\d]*)
     \s*
@@ -54,11 +54,15 @@ module Cocaine::Patterns
   /x
 
   DOUBLE_QUOTES_STRING = /
-    (?<string>".+")
+    (?<string>".*?")
   /x
 
   SINGLE_QUOTES_STRING = /
-    (?<string>'.+')
+    (?<string>'.*?')
+  /x
+
+  INTERPOLATION = /
+    (?<expression>\#\{.+?\})
   /x
 
 end
