@@ -469,6 +469,15 @@ describe Cocaine::Patterns do
       end
     end
 
+    context "when there's a newline in the string" do
+      it "captures the string" do
+        line = %|some.code "with \n words"|
+        result = line.match pattern
+        expect(result["string"]).to eq(%|"with \n words"|)
+      end
+    end
+
+
     context "when there is no string literal" do
       it "captures nothing" do
         line = %| some.stringless.code |
@@ -501,6 +510,14 @@ describe Cocaine::Patterns do
         line = %| some.code('') |
         result = line.match pattern
         expect(result["string"]).to eq(%|''|)
+      end
+    end
+
+    context "when there's a newline in the string" do
+      it "captures the string" do
+        line = %|some.code 'with \n words'|
+        result = line.match pattern
+        expect(result["string"]).to eq(%|'with \n words'|)
       end
     end
 

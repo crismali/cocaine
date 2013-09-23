@@ -48,7 +48,7 @@ module Cocaine::Patterns
 
   DOUBLE_QUOTES_STRING = /
     (?<string>".*?")
-  /x
+  /xm
 
   ESCAPED_DOUBLE_QUOTE = /
     \\ \"
@@ -56,7 +56,7 @@ module Cocaine::Patterns
 
   SINGLE_QUOTES_STRING = /
     (?<string>'.*?')
-  /x
+  /xm
 
   ESCAPED_SINGLE_QUOTE = /
     \\ \'
