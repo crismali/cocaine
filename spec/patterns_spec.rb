@@ -288,7 +288,7 @@ describe Cocaine::Patterns do
 
     it "matches 'elsif'" do
       result = "elsif".match pattern
-      expect(result["elsif"]).to eq("elsif")
+      expect(result).to_not be_nil
     end
 
     it "doesn't match other words" do

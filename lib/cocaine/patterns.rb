@@ -26,7 +26,7 @@ module Cocaine::Patterns
     (?<condition>.+)? \s*
   /x
 
-  ELSIF = /(?<elsif>elsif)/x
+  ELSIF = / elsif /x
 
   INLINE_IF_UNLESS = /
     (?<expression>.+)
@@ -50,13 +50,17 @@ module Cocaine::Patterns
     (?<string>".*?")
   /x
 
-  ESCAPED_DOUBLE_QUOTE = /\\\"/x
+  ESCAPED_DOUBLE_QUOTE = /
+    \\ \"
+  /x
 
   SINGLE_QUOTES_STRING = /
     (?<string>'.*?')
   /x
 
-  ESCAPED_SINGLE_QUOTE = /\\\'/x
+  ESCAPED_SINGLE_QUOTE = /
+    \\ \'
+  /x
 
   INTERPOLATION = /
     (?<expression>\#\{.+?\})
