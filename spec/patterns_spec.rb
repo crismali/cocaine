@@ -19,12 +19,6 @@ describe Cocaine::Patterns do
       expect(result_2["method_name"]).to eq("my_other_method")
     end
 
-    it "works when a semicolon is used at the end instead of a new line" do
-      method = "def method;"
-      result = method.match pattern
-      expect(result).to_not be_nil
-    end
-
     it "works when there's a number in the method name" do
       method = "def super_deluxe_method_5\n"
       result = method.match pattern
@@ -43,23 +37,6 @@ describe Cocaine::Patterns do
         result = number_method.match pattern
         expect(result).to_not be_nil
         expect(result["method_name"]).to eq("method_1")
-      end
-    end
-
-    context "when there's a pipe in the argument list" do
-      it "doesn't match the string" do
-        line = "def method(|arg)\n"
-        result = line.match pattern
-        expect(result).to be_nil
-      end
-    end
-
-    context "when the method name has spaces in front of it" do
-      it "captures the method name" do
-        spaced_method = "   def method\n"
-        result = spaced_method.match pattern
-        expect(result).to_not be_nil
-        expect(result["method_name"]).to eq("method")
       end
     end
 
@@ -191,20 +168,14 @@ describe Cocaine::Patterns do
        expect(result["class"]).to eq("Dog")
       end
 
-      it "captures the super class' name" do
-        class_def = "class Dog < Animal\n"
+      it "captures everything after the class name" do
+        class_def = "class Dog < Animal"
         result = class_def.match pattern
-        expect(result["super_class_name"]).to eq("Animal")
+        expect(result["super_class"]).to eq(" < Animal")
       end
 
       it "works when there are a ton of spaces" do
         class_def = "    class     Namespace::Dog    <   Animal     \n"
-        result = class_def.match pattern
-        expect(result).to_not be_nil
-      end
-
-      it "works when a semicolon is used at the end instead of a new line" do
-        class_def = "class Dog < Animal;"
         result = class_def.match pattern
         expect(result).to_not be_nil
       end
@@ -247,12 +218,6 @@ describe Cocaine::Patterns do
 
     it "works when there are a ton of unnecessary spaces" do
       line = "    if     object     \n"
-      result = line.match pattern
-      expect(result).to_not be_nil
-    end
-
-    it "works when a semicolon is used instead of a newline" do
-      line = "if object;"
       result = line.match pattern
       expect(result).to_not be_nil
     end
@@ -332,12 +297,12 @@ describe Cocaine::Patterns do
     end
   end
 
-  describe "INLINE_IF_UNLESSS" do
+  describe "INLINE_IF_UNLESS" do
 
-    let(:pattern) { Cocaine::Patterns::INLINE_IF_UNLESSS }
+    let(:pattern) { Cocaine::Patterns::INLINE_IF_UNLESS }
 
     context "when it's if" do
-      let(:line) { "array[42].map! { |x| x + x.num } if number > 55\n" }
+      let(:line) { "array[42].map! { |x| x + x.num } if number > 55" }
       let(:result) { line.match pattern }
 
       it "captures the expression" do
@@ -354,7 +319,7 @@ describe Cocaine::Patterns do
     end
 
     context "when it's unless" do
-      let(:line) { "array[42].map! { |x| x + x.num } unless number > 55;" }
+      let(:line) { "array[42].map! { |x| x + x.num } unless number > 55" }
       let(:result) { line.match pattern }
 
       it "captures the expression" do
@@ -545,6 +510,22 @@ describe Cocaine::Patterns do
         result = line.match pattern
         expect(result).to be_nil
       end
+    end
+  end
+
+  describe "ESCAPED_DOUBLE_QUOTE" do
+    it "matches an escaped double quote" do
+      pattern = Cocaine::Patterns::ESCAPED_DOUBLE_QUOTE
+      result = %|some.code("okay, \\"then\\" pal")|.match pattern
+      expect(result).to_not be_nil
+    end
+  end
+
+  describe "ESCAPED_SINGLE_QUOTE" do
+    it "matches an escaped single quote" do
+      pattern = Cocaine::Patterns::ESCAPED_SINGLE_QUOTE
+      result = %|some.code("okay, \\'then\\' pal")|.match pattern
+      expect(result).to_not be_nil
     end
   end
 

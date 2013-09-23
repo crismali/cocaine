@@ -1,11 +1,10 @@
 module Cocaine::Patterns
 
-  METHOD_DEF = /\s* def \s*
+  METHOD_DEF = / def \s*
     (?<method_name>[\w\?\.]+)
     \s* \(? \s*
       (?<args_list>[^\)\(\;\n\|]*)
     \s* \)? \s*
-    [\n\;]
   /x
 
   INITIALIZE = /
@@ -16,35 +15,29 @@ module Cocaine::Patterns
     (?<singleton>self \s* \.)
   /x
 
-  CLASS_MODULE_DEF = / \s*
+  CLASS_MODULE_DEF = /
     (class|module) \s+
     (?<class>[\w\:\d]+)
-    \s* <? \s*
-    (?<super_class_name>[\w\:\d]*)
-    \s*
-    [\n\;]
+    (?<super_class>.*)
   /x
 
-  IF_ELSIF_ELSE_UNLESS = / \s*
+  IF_ELSIF_ELSE_UNLESS = /
     (?<conditional>if | elsif | else | unless) \s*
     (?<condition>.+)? \s*
-    [\n\;]
   /x
 
   ELSIF = /(?<elsif>elsif)/x
 
-  INLINE_IF_UNLESSS = /
+  INLINE_IF_UNLESS = /
     (?<expression>.+)
     \s+ (?<conditional>if | unless) \s+
     (?<condition>.+)
-    [\n\;]
   /x
 
   DO_BASIC = /
     (?<expression>.+)
       \s do \s*
     (?<args_list>.*)
-    [\n\;]
   /x
 
   BLOCK_ARGS_LIST = /
@@ -57,9 +50,13 @@ module Cocaine::Patterns
     (?<string>".*?")
   /x
 
+  ESCAPED_DOUBLE_QUOTE = /\\\"/x
+
   SINGLE_QUOTES_STRING = /
     (?<string>'.*?')
   /x
+
+  ESCAPED_SINGLE_QUOTE = /\\\'/x
 
   INTERPOLATION = /
     (?<expression>\#\{.+?\})
