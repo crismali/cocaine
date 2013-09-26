@@ -55,7 +55,6 @@ describe Cocaine::Sanitizer do
 
   describe "#replace_string_literals" do
 
-
     it "doesn't change the original string" do
       original_string = %|some.code("words go here sir")|
       string_clone = original_string.clone
@@ -88,8 +87,8 @@ describe Cocaine::Sanitizer do
       end
 
       it "ensures that each temp string has the right index attached to it" do
-        expect(result).to match /#{temp_single_quote}0/
-        expect(result).to match /#{temp_single_quote}1/
+        expect(result).to match(/#{temp_single_quote}0/)
+        expect(result).to match(/#{temp_single_quote}1/)
       end
     end
 

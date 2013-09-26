@@ -3,7 +3,6 @@ class Cocaine::Sanitizer
   attr_accessor :removed_double_quote_strings,
     :removed_single_quote_strings
 
-
   SINGLE_REPLACEMENT_CHAR = "COCAINE_SINGLE_REPLACEMENT_CHAR"
   DOUBLE_REPLACEMENT_CHAR = "COCAINE_DOUBLE_REPLACEMENT_CHAR"
 
