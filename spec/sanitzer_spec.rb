@@ -116,8 +116,8 @@ describe Cocaine::Sanitizer do
       end
 
       it "ensures that each temp string has the right index attached to it" do
-        expect(result).to match /#{temp_double_quote}0/
-        expect(result).to match /#{temp_double_quote}1/
+        expect(result).to match(/#{temp_double_quote}0/)
+        expect(result).to match(/#{temp_double_quote}1/)
       end
     end
 
@@ -139,8 +139,8 @@ describe Cocaine::Sanitizer do
       end
 
       it "ensures that each temp string has the right index attached to it" do
-        expect(result).to match /#{temp_double_quote}0/
-        expect(result).to match /#{temp_single_quote}0/
+        expect(result).to match(/#{temp_double_quote}0/)
+        expect(result).to match(/#{temp_single_quote}0/)
       end
     end
   end
