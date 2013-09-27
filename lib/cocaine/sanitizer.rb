@@ -30,6 +30,11 @@ class Cocaine::Sanitizer
     self.removed_single_quote_strings = []
   end
 
+  def sanitize(text)
+    processed_text = replace_escaped_quotes(text)
+    replace_string_literals(processed_text)
+  end
+
   def replace_escaped_quotes(text)
     text_clone = text.clone
 
