@@ -169,8 +169,13 @@ describe Cocaine::Sanitizer do
 
     it "replaces both types of string literal" do
       expect(result).to match(temp_single_quote + 0.to_s)
+      expect(result).to match(temp_single_quote + 1.to_s)
+      expect(result).to_not match(temp_single_quote + 2.to_s)
+
       expect(result).to match(temp_double_quote + 0.to_s)
       expect(result).to match(temp_double_quote + 1.to_s)
+      expect(result).to match(temp_double_quote + 2.to_s)
+      expect(result).to_not match(temp_double_quote + 3.to_s)
     end
 
     it "returns text that doesn't contain escaped quotes or string literals" do
@@ -182,4 +187,3 @@ describe Cocaine::Sanitizer do
     end
   end
 end
-
