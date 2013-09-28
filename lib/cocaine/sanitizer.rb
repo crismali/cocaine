@@ -53,6 +53,10 @@ class Cocaine::Sanitizer
     text_clone
   end
 
+  def split(text)
+    text.split(/(?:;|\n)/).reject{ |str| str.strip! && str.empty? }
+  end
+
   private
 
   def replace_type_of_literal(options)

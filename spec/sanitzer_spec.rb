@@ -186,4 +186,31 @@ describe Cocaine::Sanitizer do
       expect(result).to_not match(Cocaine::Patterns::DOUBLE_QUOTES_STRING)
     end
   end
+
+  describe "#split" do
+    let(:chunk_1) { "more.code" }
+    let(:chunk_2) { "split(via)" }
+    let(:chunk_3) { "semi - colon" }
+
+    let(:line_1) { "code.with some_variable" }
+    let(:line_2) { "#{chunk_1}; ;#{chunk_2}; #{chunk_3}" }
+    let(:line_3) { "and newlines" }
+
+    let(:text)  do
+      "#{line_1}
+       #{line_2}
+       #{line_3}"
+    end
+
+    it "splits the text by new line and by semicolon" do
+      expected = [
+        line_1,
+        chunk_1,
+        chunk_2,
+        chunk_3,
+        line_3
+      ]
+      expect(sanitizer.split(text)).to eq(expected)
+    end
+  end
 end
