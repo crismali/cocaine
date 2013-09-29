@@ -33,8 +33,9 @@ class Cocaine::Sanitizer
   end
 
   def sanitize(text)
-    processed_text = replace_escaped_quotes(text)
-    replace_string_literals(processed_text)
+    no_escaped_quotes_text = replace_escaped_quotes(text)
+    no_string_literals_text = replace_string_literals(no_escaped_quotes_text)
+    split(no_string_literals_text)
   end
 
   def replace_escaped_quotes(text)

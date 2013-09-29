@@ -154,13 +154,12 @@ describe Cocaine::Sanitizer do
         multi-line strings with random \\"escaped quotes \\" "
        |
     end
+    let(:removed_double_quote_strings) { sanitizer.removed_double_quote_strings }
+    let(:removed_single_quote_strings) { sanitizer.removed_single_quote_strings }
 
     let!(:result) { sanitizer.sanitize(complex_string) }
 
     it "replaces escaped quotes" do
-      removed_double_quote_strings = sanitizer.removed_double_quote_strings
-      removed_single_quote_strings = sanitizer.removed_single_quote_strings
-
       expect(removed_single_quote_strings.any?{ |s| s.match(temp_single_quote_char)})
         .to be_true
       expect(removed_double_quote_strings.any?{ |s| s.match(temp_double_quote_char)})
@@ -168,22 +167,33 @@ describe Cocaine::Sanitizer do
     end
 
     it "replaces both types of string literal" do
-      expect(result).to match(temp_single_quote + 0.to_s)
-      expect(result).to match(temp_single_quote + 1.to_s)
-      expect(result).to_not match(temp_single_quote + 2.to_s)
+      expect(result.any?{ |s| s.match(temp_single_quote + 0.to_s) })
+        .to be_true
+      expect(result.any?{ |s| s.match(temp_single_quote + 1.to_s) })
+        .to be_true
+      expect(result.none?{ |s| s.match(temp_single_quote + 2.to_s) })
+        .to be_true
 
-      expect(result).to match(temp_double_quote + 0.to_s)
-      expect(result).to match(temp_double_quote + 1.to_s)
-      expect(result).to match(temp_double_quote + 2.to_s)
-      expect(result).to_not match(temp_double_quote + 3.to_s)
+      expect(result.any?{ |s| s.match(temp_double_quote + 0.to_s)})
+        .to be_true
+      expect(result.any?{ |s| s.match(temp_double_quote + 1.to_s)})
+        .to be_true
+      expect(result.any?{ |s| s.match(temp_double_quote + 2.to_s)})
+        .to be_true
+      expect(result.none?{ |s| s.match(temp_double_quote + 3.to_s)})
+        .to be_true
     end
 
     it "returns text that doesn't contain escaped quotes or string literals" do
-      expect(result).to_not match(temp_single_quote_char)
-      expect(result).to_not match(temp_double_quote_char)
+      expect(result.none?{ |s| s.match(temp_single_quote_char) })
+        .to be_true
+      expect(result.none?{ |s| s.match(temp_double_quote_char) })
+        .to be_true
 
-      expect(result).to_not match(Cocaine::Patterns::SINGLE_QUOTES_STRING)
-      expect(result).to_not match(Cocaine::Patterns::DOUBLE_QUOTES_STRING)
+      expect(result.none?{ |s| s.match(Cocaine::Patterns::SINGLE_QUOTES_STRING) })
+        .to be_true
+      expect(result.none?{ |s| s.match(Cocaine::Patterns::DOUBLE_QUOTES_STRING) })
+        .to be_true
     end
   end
 
