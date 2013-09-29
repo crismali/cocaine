@@ -53,12 +53,12 @@ describe Cocaine::Sanitizer do
     end
   end
 
-  describe "#replace_string_literals" do
+  describe "#replace_string_literals!" do
 
     it "doesn't change the original string" do
       original_string = %|some.code("words go here sir")|
       string_clone = original_string.clone
-      sanitizer.replace_string_literals(original_string)
+      sanitizer.replace_string_literals!(original_string)
       expect(original_string).to eq(string_clone)
     end
 
@@ -68,7 +68,7 @@ describe Cocaine::Sanitizer do
       let(:second_string_literal) { %|'and strings are here'| }
       let(:string) { %| chunk.of(#{first_string_literal}, #{second_string_literal})| }
 
-      let!(:result) { sanitizer.replace_string_literals(string) }
+      let!(:result) { sanitizer.replace_string_literals!(string) }
 
       it "replaces string literals with unlikely string and index" do
         expected = %| chunk.of(#{temp_single_quote}0, #{temp_single_quote}1)|
@@ -97,7 +97,7 @@ describe Cocaine::Sanitizer do
       let(:second_string_literal) { %|"and strings are here"| }
       let(:string) { %| chunk.of(#{first_string_literal}, #{second_string_literal})| }
 
-      let!(:result) { sanitizer.replace_string_literals(string) }
+      let!(:result) { sanitizer.replace_string_literals!(string) }
 
       it "replaces string literals with unlikely string and index" do
         expected = %| chunk.of(#{temp_double_quote}0, #{temp_double_quote}1)|
@@ -126,7 +126,7 @@ describe Cocaine::Sanitizer do
       let(:second_string_literal) { %|'and strings are here'| }
       let(:string) { %| chunk.of(#{first_string_literal}, #{second_string_literal})| }
 
-      let!(:result) { sanitizer.replace_string_literals(string) }
+      let!(:result) { sanitizer.replace_string_literals!(string) }
 
       it "replaces string literals with unlikely string and index" do
         expected = %| chunk.of(#{temp_double_quote}0, #{temp_single_quote}0)|

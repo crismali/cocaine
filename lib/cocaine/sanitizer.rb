@@ -34,7 +34,7 @@ class Cocaine::Sanitizer
 
   def sanitize(text)
     no_escaped_quotes_text = replace_escaped_quotes(text)
-    no_string_literals_text = replace_string_literals(no_escaped_quotes_text)
+    no_string_literals_text = replace_string_literals!(no_escaped_quotes_text)
     split(no_string_literals_text)
   end
 
@@ -47,7 +47,7 @@ class Cocaine::Sanitizer
     text_clone
   end
 
-  def replace_string_literals(text)
+  def replace_string_literals!(text)
     text_clone = text.clone
 
     STRING_LITERAL_MAPS.each do |info|
@@ -57,7 +57,7 @@ class Cocaine::Sanitizer
   end
 
   def split(text)
-    text.split(/(?:;|\n)/).reject{ |str| str.strip! && str.empty? }
+    text.split(/(?:\n|;)/).reject{ |str| str.strip! && str.empty? }
   end
 
   private
