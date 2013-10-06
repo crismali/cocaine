@@ -66,4 +66,8 @@ module Cocaine::Patterns
     (?<expression>\#\{.+?\})
   /x
 
+  INTERPOLATED_JS_STRING = /
+    (?<string>\`.*?\`)
+  /xm
+
 end

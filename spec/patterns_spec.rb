@@ -541,7 +541,7 @@ describe Cocaine::Patterns do
   describe "ESCAPED_SINGLE_QUOTE" do
     it "matches an escaped single quote" do
       pattern = Cocaine::Patterns::ESCAPED_SINGLE_QUOTE
-      result = %|some.code("okay, \\'then\\' pal")|.match pattern
+      result = %|some.code('okay, \\'then\\' pal')|.match pattern
       expect(result).to_not be_nil
     end
   end
@@ -568,6 +568,49 @@ describe Cocaine::Patterns do
       it "captures nothing" do
         string = %|"Some boring string"|
         result = string.match pattern
+        expect(result).to be_nil
+      end
+    end
+  end
+
+  describe "INTERPOLATED_JS_STRING" do
+
+    let(:pattern) { Cocaine::Patterns::INTERPOLATED_JS_STRING }
+
+    it "captures the js string literal" do
+      line = %|some.code `this is a string literal (really).`|
+      result = line.match pattern
+      expect(result["string"]).to eq('`this is a string literal (really).`')
+    end
+
+    context "when there are multiple js strings" do
+      it "captures the first string literal" do
+        line = %|some.code(`this string`).split `that string`|
+        result = line.match pattern
+        expect(result["string"]).to eq(%|`this string`|)
+      end
+    end
+
+    context "when there's an empty js string" do
+      it "captures the empty string literal" do
+        line = %| some.code(``) |
+        result = line.match pattern
+        expect(result["string"]).to eq(%|``|)
+      end
+    end
+
+    context "when there's a newline in the string" do
+      it "captures the string" do
+        line = %|some.code `with \n words`|
+        result = line.match pattern
+        expect(result["string"]).to eq(%|`with \n words`|)
+      end
+    end
+
+    context "when there is no string literal" do
+      it "captures nothing" do
+        line = %| some.stringless.code |
+        result = line.match pattern
         expect(result).to be_nil
       end
     end

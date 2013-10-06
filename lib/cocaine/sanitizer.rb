@@ -1,6 +1,7 @@
 class Cocaine::Sanitizer
 
   attr_accessor :removed_double_quote_strings,
+    :removed_interpolated_js_strings,
     :removed_single_quote_strings
 
   SINGLE_REPLACEMENT_CHAR = "COCAINE_SINGLE_REPLACEMENT_CHAR"
@@ -13,22 +14,29 @@ class Cocaine::Sanitizer
 
   SINGLE_REPLACEMENT_STRING = "COCAINE_SINGLE_REPLACEMENT_STRING_"
   DOUBLE_REPLACEMENT_STRING = "COCAINE_DOUBLE_REPLACEMENT_STRING_"
+  INTERPOLATED_JS_REPLACEMENT_STRING = "COCAINE_INTERPOLATED_JS_REPLACEMENT_STRING_"
 
   STRING_LITERAL_MAPS = [
     {
-      type: :single,
+      type: :single_quote,
       pattern: Cocaine::Patterns::SINGLE_QUOTES_STRING,
       replacement: SINGLE_REPLACEMENT_STRING
     },
     {
-      type: :double,
+      type: :double_quote,
       pattern: Cocaine::Patterns::DOUBLE_QUOTES_STRING,
       replacement: DOUBLE_REPLACEMENT_STRING
+    },
+    {
+      type: :interpolated_js,
+      pattern: Cocaine::Patterns::INTERPOLATED_JS_STRING,
+      replacement: INTERPOLATED_JS_REPLACEMENT_STRING
     }
   ]
 
   def initialize
     self.removed_double_quote_strings = []
+    self.removed_interpolated_js_strings = []
     self.removed_single_quote_strings = []
   end
 
@@ -64,7 +72,7 @@ class Cocaine::Sanitizer
 
   def replace_type_of_literal(text, options)
     while match = text.match(options[:pattern])
-      removed_strings = send("removed_#{options[:type]}_quote_strings")
+      removed_strings = send("removed_#{options[:type]}_strings")
       index = removed_strings.size
       removed_strings << match["string"]
       text.sub!(options[:pattern], "#{options[:replacement]}#{index}")
