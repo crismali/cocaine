@@ -30,7 +30,7 @@ module Cocaine::Patterns
 
   INLINE_IF_UNLESS = /
     (?<expression>.+)
-    \s+ (?<conditional>if | unless) \s+
+    \s+ (?<conditional> if | unless) \s+
     (?<condition>.+)
   /x
 
