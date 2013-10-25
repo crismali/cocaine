@@ -22,6 +22,7 @@ module Cocaine::Patterns
   /x
 
   IF_ELSIF_ELSE_UNLESS = /
+    \A
     (?<conditional>if | elsif | else | unless) \s*
     (?<condition>.+)? \s*
   /x

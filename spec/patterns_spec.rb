@@ -217,7 +217,7 @@ describe Cocaine::Patterns do
     let(:pattern) { Cocaine::Patterns::IF_ELSIF_ELSE_UNLESS }
 
     it "works when there are a ton of unnecessary spaces" do
-      line = "    if     object     \n"
+      line = "if     object     \n"
       result = line.match pattern
       expect(result).to_not be_nil
     end
@@ -227,6 +227,12 @@ describe Cocaine::Patterns do
       result = line.match pattern
       expect(result).to_not be_nil
       expect(result["condition"]).to eq("(object.something other).any?{ |x| (x * x).odd? }")
+    end
+
+    it "doesn't work when there are characters before the if" do
+      line = "expression if condition"
+      result = line.match pattern
+      expect(result).to be_nil
     end
 
     context "when an if" do
